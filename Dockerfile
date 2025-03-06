@@ -15,11 +15,8 @@ RUN npm ci --omit=dev
 ################################################################################
 # Build application
 FROM deps as build
-COPY . .
+COPY . .  # Chắc chắn sao chép tất cả code, bao gồm `public/`
 RUN npm run build
-
-# Ensure build output exists before copying
-RUN mkdir -p /usr/src/app/output-build && cp -r build /usr/src/app/output-build
 
 ################################################################################
 # Final stage
@@ -28,11 +25,12 @@ FROM base as final
 ENV NODE_ENV=production
 USER node
 
-# Copy dependencies
+# Copy dependencies và build output
 COPY --from=deps /usr/src/app/node_modules ./node_modules
-COPY --from=build /usr/src/app/output-build ./output-build
+COPY --from=build /usr/src/app/build ./build
 COPY package.json .
+COPY public ./public  # Đảm bảo sao chép thư mục public
 
 # Expose port & run app
-EXPOSE 5216
-CMD ["npm", "start"]
+EXPOSE 3000
+CMD ["npx", "serve", "-s", "build", "-l", "3000"]
