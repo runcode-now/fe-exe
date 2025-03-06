@@ -14,7 +14,8 @@ FROM node:${NODE_VERSION}-alpine as base
 
 # Set working directory for all build stages.
 WORKDIR /usr/src/app
-
+RUN mkdir -p /usr/src/app/output-build
+RUN cp -r build /usr/src/app/output-build 
 
 ################################################################################
 # Create a stage for installing production dependecies.
