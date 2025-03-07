@@ -29,7 +29,6 @@ USER node
 COPY --from=deps /usr/src/app/node_modules ./node_modules
 COPY --from=build /usr/src/app/build ./build
 COPY package.json .
-COPY public ./public  # Đảm bảo sao chép thư mục public
 
 # Expose port & run app
 EXPOSE 3000
