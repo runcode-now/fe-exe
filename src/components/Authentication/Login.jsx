@@ -61,11 +61,11 @@ const Login = () => {
         </Button>
         <Typography mt={2}>
           <span>
-            Don't have an account? <a href="/register">Register</a>
+            Don't have an account? <span style={{ color: 'blue', cursor: 'pointer' }} onClick={() => navigate('/register')}>Register</span>
           </span>
           <br />
           <span>
-            Forgot password? <a href="/forgot-password">Reset Password</a>
+            Forgot password? <span style={{ color: 'blue', cursor: 'pointer' }} onClick={() => navigate('/forgot')}>Reset Password</span>
           </span>
         </Typography>
       </Box>

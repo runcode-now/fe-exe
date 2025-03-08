@@ -9,12 +9,30 @@ import DisplayInfoEvent from "../event/DisplayInfoEvent";
 import ProtectedRoute from "../Authentication/ProtectedRoute";
 import Calender from "../schedule/Calender";
 import CalenderDetail from "../schedule/CalenderDetail";
+import ForgotPassword from "../Authentication/ForgotPassword";
+import Register from "../Authentication/Register";
 
 function ComRoutes() {
   return (
     <SidebarProvider>
       <Routes>
         <Route path="/" element={<Layout />}>
+          <Route
+            path="/register"
+            element={
+              <ProtectedRoute>
+                <Register />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/forgot"
+            element={
+              <ProtectedRoute>
+                <ForgotPassword />
+              </ProtectedRoute>
+            }
+          />
           <Route
             index
             element={
