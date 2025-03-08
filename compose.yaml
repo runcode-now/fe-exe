@@ -14,7 +14,7 @@ services:
     environment:
       NODE_ENV: production
     ports:
-      - 5216:5216
+      - 8752:80
     volumes:
       - /usr/src/app/output-build:/usr/src/app/output-build
 
