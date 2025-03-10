@@ -9,6 +9,7 @@ import ForgotPassword from "./components/Authentication/ForgotPassword";
 import ResetPassword from "./components/Authentication/ResetPassword";
 import Logout from "./components/Authentication/Logout";
 import { AuthProvider, useAuth } from "./components/Authentication/AuthContext";
+import ChatBoxContainer from "./components/chatbox/ChatBoxContainer";
 
 const GOOGLE_MAPS_API_KEY = "AIzaSyA1m9VQIw8SfC5jYRvgIZeIweHBoW7y7WI";
 const GOOGLE_MAPS_LIBRARIES = ["places"];
@@ -33,25 +34,29 @@ const ProtectedApp = () => {
   }
 
   return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-      <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/reset-password" element={<ResetPassword />} />
-      <Route path="/logout" element={<Logout />} />
-      <Route
-        path="/*"
-        element={
-          isAuthenticated ? (
-            <SidebarProvider>
-              <ComRoutes />
-            </SidebarProvider>
-          ) : (
-            <Navigate to="/login" replace />
-          )
-        }
-      />
-    </Routes>
+    <>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/logout" element={<Logout />} />
+        <Route
+          path="/*"
+          element={
+            isAuthenticated ? (
+              <SidebarProvider>
+                <ComRoutes />
+              </SidebarProvider>
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+      </Routes>
+      {/* Đặt ChatBoxContainer ngoài Routes để hiển thị trên mọi trang */}
+      <ChatBoxContainer />
+    </>
   );
 };
 
