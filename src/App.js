@@ -17,11 +17,11 @@ const GOOGLE_MAPS_LIBRARIES = ["places"];
 const App = () => {
   return (
     <AuthProvider>
-      <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY} libraries={GOOGLE_MAPS_LIBRARIES}>
+      {/* <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY} libraries={GOOGLE_MAPS_LIBRARIES}> */}
         <BrowserRouter>
           <ProtectedApp />
         </BrowserRouter>
-      </LoadScript>
+      {/* </LoadScript> */}
     </AuthProvider>
   );
 };
@@ -55,7 +55,7 @@ const ProtectedApp = () => {
         />
       </Routes>
       {/* Đặt ChatBoxContainer ngoài Routes để hiển thị trên mọi trang */}
-      <ChatBoxContainer />
+      <ChatBoxContainer /> 
     </>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { GoogleMap, LoadScript } from "@react-google-maps/api";
+// import { GoogleMap, LoadScript } from "@react-google-maps/api";
 import { useNavigate } from "react-router-dom";
 import {
   TextField,
@@ -42,25 +42,25 @@ const GenEventForm = () => {
     categoryId: "",
   });
     const { user } = useAuth(); // Lấy user từ AuthContext
-  const [userLocation, setUserLocation] = useState(null);
-  const [mapCenter, setMapCenter] = useState({ lat: 21.0278, lng: 105.8342 });
-  const [loadingMap, setLoadingMap] = useState(true);
+  // const [userLocation, setUserLocation] = useState(null);
+  // const [mapCenter, setMapCenter] = useState({ lat: 21.0278, lng: 105.8342 });
+  // const [loadingMap, setLoadingMap] = useState(true);
   const [categories, setCategories] = useState([]);
   
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get(
-          "http://103.179.185.149:8435/GetEventCagetory"
-        );
-        setCategories(response.data.data); // Giả sử API trả về { message: "...", data: [...] }
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchCategories = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         "http://103.179.185.149:8435/GetEventCagetory"
+  //       );
+  //       setCategories(response.data.data); // Giả sử API trả về { message: "...", data: [...] }
+  //     } catch (error) {
+  //       console.error("Error fetching categories:", error);
+  //     }
+  //   };
 
-    fetchCategories();
-  }, []);
+  //   fetchCategories();
+  // }, []);
 
   const isFormValid = () => {
     const start = eventData.startDate;
@@ -161,16 +161,16 @@ const GenEventForm = () => {
   const handleBack = () => setStep(1);
   // maps
 
-  useEffect(() => {
-    setLoadingMap(false);
-    if (navigator.geolocation) {
-      navigator.geolocation.watchPosition((position) => {
-        const { latitude, longitude } = position.coords;
-        setUserLocation({ lat: latitude, lng: longitude });
-        setMapCenter({ lat: latitude, lng: longitude }); // Di chuyển bản đồ đến vị trí người dùng
-      });
-    }
-  }, []);
+  // useEffect(() => {
+  //   setLoadingMap(false);
+  //   if (navigator.geolocation) {
+  //     navigator.geolocation.watchPosition((position) => {
+  //       const { latitude, longitude } = position.coords;
+  //       setUserLocation({ lat: latitude, lng: longitude });
+  //       setMapCenter({ lat: latitude, lng: longitude }); // Di chuyển bản đồ đến vị trí người dùng
+  //     });
+  //   }
+  // }, []);
 
   // Hàm để toggle mở/đóng sidebar
 
@@ -452,7 +452,7 @@ const GenEventForm = () => {
             )}
 
             {/* Step 2: Location Information */}
-            {step === 2 && userLocation && (
+            {step === 2 && (
               <Box sx={styles.generalContainer}>
                 <Box sx={styles.generalHeader}>
                   <Typography variant="h6">Location Information</Typography>
@@ -468,18 +468,10 @@ const GenEventForm = () => {
                     fullWidth
                     sx={{ marginBottom: "20px" }}
                   />
-                  {!loadingMap && mapCenter && (
-                    <GoogleMap
-                      mapContainerStyle={{ height: "300px", width: "100%" }}
-                      center={mapCenter}
-                      zoom={12}
-                    ></GoogleMap>
-                  )}
-                  {loadingMap && (
+     
                     <Typography sx={{ textAlign: "center" }}>
                       Loading map...
                     </Typography>
-                  )}
 
                   {/* Back & Submit Buttons */}
                   <Box
