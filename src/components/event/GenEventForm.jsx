@@ -47,20 +47,20 @@ const GenEventForm = () => {
   // const [loadingMap, setLoadingMap] = useState(true);
   const [categories, setCategories] = useState([]);
   
-  // useEffect(() => {
-  //   const fetchCategories = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         "http://103.179.185.149:8435/GetEventCagetory"
-  //       );
-  //       setCategories(response.data.data); // Giả sử API trả về { message: "...", data: [...] }
-  //     } catch (error) {
-  //       console.error("Error fetching categories:", error);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(
+          "http://103.179.185.149:8435/GetEventCagetory"
+        );
+        setCategories(response.data.data); // Giả sử API trả về { message: "...", data: [...] }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
 
-  //   fetchCategories();
-  // }, []);
+    fetchCategories();
+  }, []);
 
   const isFormValid = () => {
     const start = eventData.startDate;

@@ -87,7 +87,7 @@ const DisplayInfoEvent = () => {
       if (
         !window.confirm(
           "Are you sure you want to delete event " + event.eventName
-        )
+        ) 
       ) {
         return;
       }
