@@ -17,9 +17,9 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useSidebar } from "./SidebarProvider";
 import { useNavigate } from "react-router-dom";
 import LogoutIcon from "@mui/icons-material/ExitToApp";
-import { SiOpenai } from "react-icons/si";
+// import { SiOpenai } from "react-icons/si";
 import { useAuth } from "../Authentication/AuthContext";
-
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
 
 const Sidebar = () => {
   const { isSidebarOpen, toggleSidebar } = useSidebar(); // Lấy từ SidebarContext
@@ -203,27 +203,27 @@ const Sidebar = () => {
           button="true"
           sx={{
             backgroundColor:
-              activeItem === "Chatbot" ? "#F15A24" : "transparent",
+              activeItem === "Email" ? "#F15A24" : "transparent",
             "&:hover": { backgroundColor: "#4C4E641F" },
-            color: activeItem === "Chatbot" ? "#FFF" : "#757575",
+            color: activeItem === "Email" ? "#FFF" : "#757575",
             fontSize: "21px",
             cursor: "pointer",
             borderRadius: "12px",
           }}
           onClick={() => {
-            setActiveItem("Chatbot");
-            navigate("/chatbot");
+            setActiveItem("Email");
+            navigate("/email");
           }}
         >
           <ListItemIcon>
-            <SiOpenai
-              sx={{ color: activeItem === "Chatbot" ? "#FFF" : "#4C4E64DE" }}
+            <MailOutlineIcon
+              sx={{ color: activeItem === "Email" ? "#FFF" : "#4C4E64DE" }}
             />
           </ListItemIcon>
           {isSidebarOpen && (
             <ListItemText
-              primary="Chatbot"
-              sx={{ color: activeItem === "Chatbot" ? "#FFF" : "#4C4E64DE" }}
+              primary="Email"
+              sx={{ color: activeItem === "Email" ? "#FFF" : "#4C4E64DE" }}
             />
           )}
         </ListItem>

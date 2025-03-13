@@ -1,36 +1,37 @@
 import React, { useState } from "react";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import emailjs from "emailjs-com"; // Import emailjs
-import "./styles/EmailBox.css"; // Để tùy chỉnh CSS
+import { Editor } from "primereact/editor";
+import "primereact/resources/themes/lara-light-indigo/theme.css";
+import "primereact/resources/primereact.min.css";
+import "primeicons/primeicons.css";
+import emailjs from "emailjs-com";
+import "./styles/EmailBox.css";
 
 const EmailBox = () => {
   const [emailContent, setEmailContent] = useState("");
+  const [emailTitle, setEmailTitle] = useState("");
 
-  // Hàm xử lý khi người dùng gửi feedback
   const handleSendFeedback = () => {
-    // Thực hiện gửi email
     const templateParams = {
-      to_name: "Website Owner", // Tên người nhận
-      from_name: "Anonymous",   // Tên người gửi (ẩn danh)
-      message: emailContent,    // Nội dung email
+      to_name: "eventsetonline@gmail.com",
+      title: emailTitle,
+      message: emailContent,
     };
-
-    // Gửi email qua EmailJS
     emailjs
       .send(
-        "your_service_id", // service ID của bạn từ EmailJS
-        "your_template_id", // template ID của bạn từ EmailJS
+        "service_hz6pc5i",
+        "template_tw2so5g",
         templateParams,
-        "your_user_id" // User ID của bạn từ EmailJS
+        "2_c9yD0b-Cu3_Fige"
       )
       .then(
         (response) => {
           console.log("Email sent successfully:", response);
           alert("Feedback sent successfully!");
+          setEmailContent("");
+          setEmailTitle("");
         },
         (error) => {
-          console.log("Error sending email:", error);
+          console.error("Error sending email:", error);
           alert("Something went wrong, please try again.");
         }
       );
@@ -38,25 +39,37 @@ const EmailBox = () => {
 
   return (
     <div className="email-box-container">
-      <h2>Email Feedback</h2>
-      <form onSubmit={(e) => e.preventDefault()}>
-        <div className="ckeditor-container">
-          <CKEditor
-            editor={ClassicEditor}
-            data={emailContent}
-            onChange={(event, editor) => {
-              const data = editor.getData();
-              setEmailContent(data);
-            }}
+      <h1 className="email-box-title">Email feedback</h1>
+      <form onSubmit={(e) => e.preventDefault()} className="email-box-form">
+        <div className="title-container">
+          <input
+            type="text"
+            value={emailTitle}
+            onChange={(e) => setEmailTitle(e.target.value)}
+            placeholder="Enter email title..."
+            className="title-input"
           />
         </div>
-        <button
-          type="button"
-          className="send-button"
-          onClick={handleSendFeedback}
-        >
-          Send Feedback
-        </button>
+        <div className="quill-container">
+          <Editor
+            value={emailContent}
+            onTextChange={(e) => setEmailContent(e.htmlValue || "")}
+            placeholder="Type your feedback here..."
+            theme="snow"
+            style={{ minHeight: "500px", width: "100%" }}
+            className="quill-editor"
+          />
+        </div>
+        <div style={{ display: "flex", justifyContent: "right" }}>
+          <button
+            type="button"
+            className="send-button"
+            onClick={handleSendFeedback}
+          >
+            Send Feedback
+          </button>
+        </div>
+
       </form>
     </div>
   );

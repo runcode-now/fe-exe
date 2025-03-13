@@ -12,12 +12,21 @@ import CalenderDetail from "../schedule/CalenderDetail";
 import Register from "../Authentication/Register";
 import Login from "../Authentication/Login";
 import ForgotPassword from "../Authentication/ForgotPassword";
+import EmailBox from "../email/EmailBox";
 
 function ComRoutes() {
   return (
     <SidebarProvider>
       <Routes>
         <Route path="/" element={<Layout />}>
+          <Route
+            path="/email"
+            element={
+              <ProtectedRoute>
+                <EmailBox />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/login"
             element={
@@ -58,14 +67,14 @@ function ComRoutes() {
               </ProtectedRoute>
             }
           />
-          <Route
+          {/* <Route
             path="/chatbot"
             element={
               <ProtectedRoute>
                 <ChatBoxContainer />
               </ProtectedRoute>
             }
-          />
+          /> */}
           <Route
             path="/displayEvent/:eventId"
             element={

@@ -10,6 +10,8 @@ import ResetPassword from "./components/Authentication/ResetPassword";
 import Logout from "./components/Authentication/Logout";
 import { AuthProvider, useAuth } from "./components/Authentication/AuthContext";
 import ChatBoxContainer from "./components/chatbox/ChatBoxContainer";
+import { Email } from "@mui/icons-material";
+import EmailBox from "./components/email/EmailBox";
 
 const GOOGLE_MAPS_API_KEY = "AIzaSyA1m9VQIw8SfC5jYRvgIZeIweHBoW7y7WI";
 const GOOGLE_MAPS_LIBRARIES = ["places"];
