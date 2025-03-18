@@ -135,14 +135,13 @@ const Navbar = ({ onEventJoined }) => {
         }}
       >
         {user?.email || "Guest"}
-        <span>Guest</span>
       </Typography>
 
       {/* Modal */}
       <Modal open={openModal} onClose={handleCloseModal}>
         <Box sx={style}>
           <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
-            <Typography variant="h6" sx={{ fontWeight: 600, color: "#f2683c" }}>
+            <Typography variant="h6" sx={{ fontWeight: 600, color: "#f2683c", marginLeft: "30px" }}>
               Join an Event
             </Typography>
             <IconButton onClick={handleCloseModal} sx={{ color: "#f2683c" }}>
