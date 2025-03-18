@@ -46,6 +46,7 @@ const Sidebar = () => {
           backgroundColor: "#ffffff",
           padding: "10px",
           height: "100vh", // Giới hạn chiều cao bằng màn hình
+          marginTop: "80px", // Thêm margin-top 80px
           overflowY: "hidden", // Bỏ thanh cuộn dọc
           overflowX: "hidden", // Bỏ thanh cuộn ngang
           boxSizing: "border-box", // Đảm bảo padding không làm vượt kích thước
