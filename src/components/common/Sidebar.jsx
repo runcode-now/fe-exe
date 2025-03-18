@@ -147,7 +147,7 @@ const Sidebar = () => {
                 sx={{ color: activeItem === "Home" ? "#FFF" : "#4C4E64DE" }}
               />
             </ListItem>
-            {/* <ListItem
+            <ListItem
               button
               sx={{
                 pl: 4,
@@ -168,7 +168,7 @@ const Sidebar = () => {
                 sx={{ color: activeItem === "Schedule" ? "#FFF" : "#4C4E64DE" }}
               />
             </ListItem>
-            <ListItem
+            {/* <ListItem
               button
               sx={{
                 pl: 4,
@@ -182,8 +182,8 @@ const Sidebar = () => {
               <ListItemText
                 primary="Analytic"
                 sx={{ color: activeItem === "Analytic" ? "#FFF" : "#4C4E64DE" }}
-              />
-            </ListItem> */}
+              /> 
+            </ListItem>  */}
           </List>
         </Collapse>
 
@@ -215,7 +215,7 @@ const Sidebar = () => {
         </ListItem>
 
         {/* Timeline */}
-        <ListItem
+        {/* <ListItem
           button
           sx={{
             backgroundColor:
@@ -236,7 +236,7 @@ const Sidebar = () => {
               sx={{ color: activeItem === "Timeline" ? "#FFF" : "#4C4E64DE" }}
             />
           )}
-        </ListItem>
+        </ListItem> */}
 
         {/* Marketing */}
         <ListItem
