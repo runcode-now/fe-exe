@@ -1,4 +1,4 @@
-import React, { use, useState } from "react";
+import React, { useState } from "react";
 import { Box, Collapse } from "@mui/material";
 import {
   Drawer,
@@ -17,56 +17,53 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useSidebar } from "./SidebarProvider";
 import { useNavigate } from "react-router-dom";
 import LogoutIcon from "@mui/icons-material/ExitToApp";
-// import { SiOpenai } from "react-icons/si";
 import { useAuth } from "../Authentication/AuthContext";
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
 
 const Sidebar = () => {
-  const { isSidebarOpen, toggleSidebar } = useSidebar(); // Lấy từ SidebarContext
+  const { isSidebarOpen, toggleSidebar } = useSidebar();
   const [openReports, setOpenReports] = useState(false);
   const [activeItem, setActiveItem] = useState("Home");
   const navigate = useNavigate();
-  const {user} = useAuth();
+  const { user } = useAuth();
 
   const toggleReports = () => {
-    setOpenReports(!openReports); // Chuyển đổi trạng thái của submenu Reports
+    setOpenReports(!openReports);
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token"); 
-    navigate("/login"); 
+    localStorage.removeItem("token");
+    navigate("/login");
   };
 
   return (
     <Drawer
       sx={{
-        width: isSidebarOpen ? 240 : 58, // Sidebar rộng khi mở và thu nhỏ khi đóng
-        backgroundColor: "#ffffff",
+        width: isSidebarOpen ? 240 : 58,
         flexShrink: 0,
         "& .MuiDrawer-paper": {
           width: isSidebarOpen ? 240 : 58,
-          backgroundColor: "#ffffff",
+          background: "linear-gradient(180deg, #f2683c 0%, #ff8c5a 100%)", // Gradient giống Navbar
           padding: "10px",
-
-          // transition: "transform 1s ease",
+          transition: "width 0.3s ease", // Hiệu ứng mượt khi mở rộng/thu gọn
+          boxShadow: "2px 0 10px rgba(0, 0, 0, 0.1)", // Thêm shadow nhẹ
+          color: "#ffffff", // Màu chữ trắng
         },
       }}
       variant="permanent"
       anchor="left"
     >
-      {/* Nút toggle ở trên đầu */}
-
+      {/* Header */}
       <Box
         sx={{
           display: "flex",
           alignItems: "center",
+          justifyContent: isSidebarOpen ? "space-between" : "center",
           width: "100%",
-          position: "relative",
-          margin: "10px",
-          cursor: "pointer",
+          padding: "10px",
+          minHeight: "64px", // Chiều cao cố định giống Navbar
         }}
       >
-        {/* Logo */}
         {isSidebarOpen && (
           <Box
             component="img"
@@ -80,69 +77,46 @@ const Sidebar = () => {
             }}
           />
         )}
-
-        {/* Nút Menu */}
         <IconButton
-          button="true"
           onClick={toggleSidebar}
           sx={{
-            position: "absolute",
-            transition: "left 0.3s",
-            marginRight: "10px",
-            right: "10px",
+            color: "#ffffff",
+            "&:hover": { backgroundColor: "rgba(255, 255, 255, 0.2)" },
           }}
         >
           <MenuIcon />
         </IconButton>
       </Box>
-      <List>
+
+      <List sx={{ flexGrow: 1 }}>
+        {/* Dashboard */}
         <ListItem
-          button="true"
-          onClick={() => {
-            toggleReports(); // Giữ logic mở/đóng submenu
-          }}
+          button
+          onClick={toggleReports}
           sx={{
-            "&:hover": { backgroundColor: "#4C4E641F" },
-            cursor: "pointer",
             borderRadius: "12px",
+            "&:hover": { backgroundColor: "rgba(255, 255, 255, 0.2)" },
+            padding: "12px 16px",
           }}
         >
           <ListItemIcon>
-            <HomeIcon
-              sx={{ color: activeItem === "Dashboard" ? "#FFF" : "#4C4E64DE" }}
-            />
+            <HomeIcon sx={{ color: "#ffffff" }} />
           </ListItemIcon>
-          {isSidebarOpen && (
-            <ListItemText
-              primary="Dashboard"
-              sx={{ color: activeItem === "Dashboard" ? "#FFF" : "#4C4E64DE" }}
-            />
-          )}
-          {openReports ? (
-            <ExpandLessIcon
-              sx={{ color: activeItem === "Dashboard" ? "#FFF" : "#4C4E64DE" }}
-            />
-          ) : (
-            <ExpandMoreIcon
-              sx={{ color: activeItem === "Dashboard" ? "#FFF" : "#4C4E64DE" }}
-            />
-          )}
+          {isSidebarOpen && <ListItemText primary="Dashboard" />}
+          {isSidebarOpen &&
+            (openReports ? <ExpandLessIcon /> : <ExpandMoreIcon />)}
         </ListItem>
 
-        <Collapse
-          in={isSidebarOpen && openReports}
-          timeout="auto"
-          unmountOnExit
-        >
+        {/* Submenu Reports */}
+        <Collapse in={isSidebarOpen && openReports} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             <ListItem
-              button="true"
+              button
               sx={{
                 pl: 4,
                 backgroundColor:
-                  activeItem === "Home" ? "#F15A24" : "transparent",
-                cursor: "pointer",
-                "&:hover": { backgroundColor: "#4C4E641F" },
+                  activeItem === "Home" ? "rgba(255, 255, 255, 0.3)" : "transparent",
+                "&:hover": { backgroundColor: "rgba(255, 255, 255, 0.2)" },
                 borderRadius: "12px",
               }}
               onClick={() => {
@@ -150,65 +124,51 @@ const Sidebar = () => {
                 setActiveItem("Home");
               }}
             >
-              <ListItemText
-                primary="Home"
-                sx={{ color: activeItem === "Home" ? "#FFF" : "#4C4E64DE" }}
-              />
+              <ListItemText primary="Home" />
             </ListItem>
-            <ListItem
-              button="true"
+            {/* <ListItem
+              button
               sx={{
                 pl: 4,
                 backgroundColor:
-                  activeItem === "Schedule" ? "#F15A24" : "transparent",
-                "&:hover": { backgroundColor: "#4C4E641F" },
-                color: activeItem === "Schedule" ? "#4C4E641F" : "#cbcbcb",
-                cursor: "pointer",
+                  activeItem === "Schedule" ? "rgba(255, 255, 255, 0.3)" : "transparent",
+                "&:hover": { backgroundColor: "rgba(255, 255, 255, 0.2)" },
                 borderRadius: "12px",
               }}
               onClick={() => {
                 setActiveItem("Schedule");
-                navigate(`/schedule/${user.id}`); 
+                navigate(`/schedule/${user.id}`);
                 console.log(user.id);
                 console.log("============================================================================");
               }}
             >
-              <ListItemText
-                primary="Schedule"
-                sx={{ color: activeItem === "Schedule" ? "#FFF" : "#4C4E64DE" }}
-              />
+              <ListItemText primary="Schedule" />
             </ListItem>
             <ListItem
-              button="true"
+              button
               sx={{
                 pl: 4,
                 backgroundColor:
-                  activeItem === "Analytic" ? "#F15A24" : "transparent",
-                "&:hover": { backgroundColor: "#4C4E641F" },
-                color: activeItem === "Analytic" ? "#FFF" : "#757575",
-                cursor: "pointer",
+                  activeItem === "Analytic" ? "rgba(255, 255, 255, 0.3)" : "transparent",
+                "&:hover": { backgroundColor: "rgba(255, 255, 255, 0.2)" },
                 borderRadius: "12px",
               }}
               onClick={() => setActiveItem("Analytic")}
             >
-              <ListItemText
-                primary="Analytic"
-                sx={{ color: activeItem === "Analytic" ? "#FFF" : "#4C4E64DE" }}
-              />
-            </ListItem>
+              <ListItemText primary="Analytic" />
+            </ListItem> */}
           </List>
         </Collapse>
 
+        {/* Email */}
         <ListItem
-          button="true"
+          button
           sx={{
             backgroundColor:
-              activeItem === "Email" ? "#F15A24" : "transparent",
-            "&:hover": { backgroundColor: "#4C4E641F" },
-            color: activeItem === "Email" ? "#FFF" : "#757575",
-            fontSize: "21px",
-            cursor: "pointer",
+              activeItem === "Email" ? "rgba(255, 255, 255, 0.3)" : "transparent",
+            "&:hover": { backgroundColor: "rgba(255, 255, 255, 0.2)" },
             borderRadius: "12px",
+            padding: "12px 16px",
           }}
           onClick={() => {
             setActiveItem("Email");
@@ -216,119 +176,79 @@ const Sidebar = () => {
           }}
         >
           <ListItemIcon>
-            <MailOutlineIcon
-              sx={{ color: activeItem === "Email" ? "#FFF" : "#4C4E64DE" }}
-            />
+            <MailOutlineIcon sx={{ color: "#ffffff" }} />
           </ListItemIcon>
-          {isSidebarOpen && (
-            <ListItemText
-              primary="Email"
-              sx={{ color: activeItem === "Email" ? "#FFF" : "#4C4E64DE" }}
-            />
-          )}
+          {isSidebarOpen && <ListItemText primary="Email" />}
         </ListItem>
 
-        {/* <ListItem
+        {/* Timeline */}
+        <ListItem
           button
           sx={{
-            mb: 1,
-            backgroundColor: activeItem === "Inbox" ? "#F15A24" : "transparent",
-            "&:hover": { backgroundColor: "#4C4E641F" },
-            color: activeItem === "Inbox" ? "#FFF" : "#757575",
-            cursor: "pointer",
-            borderRadius: "12px",
-          }}
-          onClick={() => {
-            setActiveItem("Inbox");
-            navigate("/displayEvent");
-          }}
-        >
-          <ListItemIcon>
-            <InboxIcon
-              sx={{ color: activeItem === "Inbox" ? "#FFF" : "#4C4E64DE" }}
-            />
-          </ListItemIcon>
-          {isSidebarOpen && (
-            <ListItemText
-              primary="Inbox"
-              sx={{ color: activeItem === "Inbox" ? "#FFF" : "#4C4E64DE" }}
-            />
-          )}
-        </ListItem> */}
-
-        <ListItem
-          button="true"
-          sx={{
             backgroundColor:
-              activeItem === "Timeline" ? "#F15A24" : "transparent",
-            "&:hover": { backgroundColor: "#4C4E641F" },
-            color: activeItem === "Timeline" ? "#FFF" : "#757575",
-            cursor: "pointer",
+              activeItem === "Timeline" ? "rgba(255, 255, 255, 0.3)" : "transparent",
+            "&:hover": { backgroundColor: "rgba(255, 255, 255, 0.2)" },
             borderRadius: "12px",
+            padding: "12px 16px",
           }}
           onClick={() => setActiveItem("Timeline")}
         >
           <ListItemIcon>
-            <TimelineIcon
-              sx={{ color: activeItem === "Timeline" ? "#FFF" : "#4C4E64DE" }}
-            />
+            <TimelineIcon sx={{ color: "#ffffff" }} />
           </ListItemIcon>
-          {isSidebarOpen && (
-            <ListItemText
-              primary="Timeline"
-              sx={{ color: activeItem === "Timeline" ? "#FFF" : "#4C4E64DE" }}
-            />
-          )}
+          {isSidebarOpen && <ListItemText primary="Timeline" />}
         </ListItem>
 
+        {/* Marketing */}
         <ListItem
-          button="true"
+          button
           sx={{
-            mb: 1,
             backgroundColor:
-              activeItem === "Marketing" ? "#F15A24" : "transparent",
-            "&:hover": { backgroundColor: "#4C4E641F" },
-            color: activeItem === "Marketing" ? "#FFF" : "#757575",
-            cursor: "pointer",
+              activeItem === "Marketing" ? "rgba(255, 255, 255, 0.3)" : "transparent",
+            "&:hover": { backgroundColor: "rgba(255, 255, 255, 0.2)" },
             borderRadius: "12px",
+            padding: "12px 16px",
           }}
           onClick={() => setActiveItem("Marketing")}
         >
           <ListItemIcon>
-            <CampaignIcon
-              sx={{ color: activeItem === "Marketing" ? "#FFF" : "#4C4E64DE" }}
-            />
+            <CampaignIcon sx={{ color: "#ffffff" }} />
           </ListItemIcon>
-          {isSidebarOpen && (
-            <ListItemText
-              primary="Marketing"
-              sx={{ color: activeItem === "Marketing" ? "#FFF" : "#4C4E64DE" }}
-            />
-          )}
+          {isSidebarOpen && <ListItemText primary="Marketing" />}
         </ListItem>
 
+        {/* Emails (Placeholder) */}
         <ListItem
-          button="true"
+          button
           sx={{
             backgroundColor:
-              activeItem === "Emails" ? "#F15A24" : "transparent",
-            "&:hover": { backgroundColor: "#4C4E641F" },
-            color: activeItem === "Emails" ? "#FFF" : "#757575",
-            cursor: "pointer",
+              activeItem === "Emails" ? "rgba(255, 255, 255, 0.3)" : "transparent",
+            "&:hover": { backgroundColor: "rgba(255, 255, 255, 0.2)" },
             borderRadius: "12px",
+            padding: "12px 16px",
           }}
           onClick={() => setActiveItem("Emails")}
         >
-   
+          {/* Có thể thêm icon hoặc text nếu cần */}
         </ListItem>
+      </List>
 
-        <ListItem button onClick={handleLogout}>
+      {/* Logout (Đặt ở dưới cùng) */}
+      <List sx={{ mt: "auto" }}>
+        <ListItem
+          button
+          onClick={handleLogout}
+          sx={{
+            "&:hover": { backgroundColor: "rgba(255, 255, 255, 0.2)" },
+            borderRadius: "12px",
+            padding: "12px 16px",
+          }}
+        >
           <ListItemIcon>
-            <LogoutIcon color="error" />
+            <LogoutIcon sx={{ color: "#ff4d4d" }} /> {/* Màu đỏ nổi bật */}
           </ListItemIcon>
-          {isSidebarOpen && <ListItemText primary="Logout" sx={{ color: "red" }} />}
+          {isSidebarOpen && <ListItemText primary="Logout" sx={{ color: "#ff4d4d" }} />}
         </ListItem>
-
       </List>
     </Drawer>
   );
