@@ -21,6 +21,8 @@
     "emailjs-com": "^3.2.0",
     "lodash": "^4.17.21",
     "nodemailer": "^6.10.0",
+    "primeicons": "^7.0.0",
+    "primereact": "^10.9.3",
     "quill": "^2.0.3",
     "react": "^19.0.0",
     "react-big-calendar": "^1.18.0",
