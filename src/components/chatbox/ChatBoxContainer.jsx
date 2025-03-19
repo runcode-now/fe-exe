@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 const ChatBoxContainer = () => {
   const [messages, setMessages] = useState([]);
@@ -218,7 +220,48 @@ const ChatBoxContainer = () => {
                     wordWrap: "break-word",
                   }}
                 >
-                  <p style={{ margin: 0 }}>{message.text}</p>
+                  <ReactMarkdown
+                    children={message.text}
+                    remarkPlugins={[remarkGfm]}
+                    components={{
+                      table: ({ children }) => (
+                        <table
+                          style={{
+                            width: "100%",
+                            borderCollapse: "collapse",
+                            marginBottom: "20px",
+                          }}
+                        >
+                          {children}
+                        </table>
+                      ),
+                      th: ({ children }) => (
+                        <th
+                          style={{
+                            padding: "10px",
+                            backgroundColor: "#f0f0f0",
+                            textAlign: "center",
+                            border: "1px solid #ddd",
+                          }}
+                        >
+                          {children}
+                        </th>
+                      ),
+                      td: ({ children }) => (
+                        <td
+                          style={{
+                            padding: "8px",
+                            textAlign: "center",
+                            border: "1px solid #ddd",
+                            backgroundColor: "#fafafa",
+                          }}
+                        >
+                          {children}
+                        </td>
+                      ),
+                      tr: ({ children }) => <tr>{children}</tr>,
+                    }}
+                  />
                 </div>
               </div>
             ))}
