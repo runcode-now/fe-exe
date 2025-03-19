@@ -224,6 +224,16 @@ const ChatBoxContainer = () => {
                     children={message.text}
                     remarkPlugins={[remarkGfm]}
                     components={{
+                      p: ({ children }) => (
+                        <p
+                          style={{
+                            margin: 0, 
+                            lineHeight: "1.5",
+                          }}
+                        >
+                          {children}
+                        </p>
+                      ),
                       table: ({ children }) => (
                         <table
                           style={{
@@ -262,6 +272,7 @@ const ChatBoxContainer = () => {
                       tr: ({ children }) => <tr>{children}</tr>,
                     }}
                   />
+
                 </div>
               </div>
             ))}
