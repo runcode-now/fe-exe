@@ -16,7 +16,7 @@ import { useAuth } from "../Authentication/AuthContext";
 
 const DisplayInfoEvent = () => {
   const [event, setEvent] = useState(null);
-   const { user } = useAuth(); // Lấy user từ AuthContext
+  const { user } = useAuth(); // Lấy user từ AuthContext
   // State để lưu dữ liệu user
   const { eventId } = useParams(); // Lấy cả id và userId từ URL
   const navigate = useNavigate();
@@ -87,7 +87,7 @@ const DisplayInfoEvent = () => {
       if (
         !window.confirm(
           "Are you sure you want to delete event " + event.eventName
-        ) 
+        )
       ) {
         return;
       }
@@ -294,24 +294,24 @@ const DisplayInfoEvent = () => {
                 </Grid>
               </Grid>
               {checkMakeEvent === true && (
-              <Grid
-                item
-                xs={12}
-                sm={12}
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  marginTop: "20px",
-                }}
-              >
-                <Button
-                  variant="contained"
-                  color="error"
-                  onClick={() => handleDeleteEvent(eventId)}
+                <Grid
+                  item
+                  xs={12}
+                  sm={12}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    marginTop: "20px",
+                  }}
                 >
-                  Delete Event
-                </Button>
-              </Grid>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={() => handleDeleteEvent(eventId)}
+                  >
+                    Delete Event
+                  </Button>
+                </Grid>
               )}
             </Box>
 
@@ -331,7 +331,7 @@ const DisplayInfoEvent = () => {
                 Explore More
               </Typography>
               <Grid container spacing={3} justifyContent="center">
-                {["agenda", "make agenda"].map((type) => (
+                {["make plan", "agenda", "make agenda"].map((type) => (
                   <Grid item xs={12} sm={4} key={type}>
                     <Card
                       sx={{
