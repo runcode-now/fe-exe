@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 import LogoutIcon from "@mui/icons-material/ExitToApp";
 import { useAuth } from "../Authentication/AuthContext";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import ContactsIcon from "@mui/icons-material/Contacts";
 
 const Sidebar = () => {
   const { isSidebarOpen, toggleSidebar } = useSidebar();
@@ -126,7 +127,11 @@ const Sidebar = () => {
         </ListItem>
 
         {/* Submenu Reports */}
-        <Collapse in={isSidebarOpen && openReports} timeout="auto" unmountOnExit>
+        <Collapse
+          in={isSidebarOpen && openReports}
+          timeout="auto"
+          unmountOnExit
+        >
           <List component="div" disablePadding>
             <ListItem
               button
@@ -160,7 +165,9 @@ const Sidebar = () => {
                 setActiveItem("Schedule");
                 navigate(`/schedule/${user.id}`);
                 console.log(user.id);
-                console.log("============================================================================");
+                console.log(
+                  "============================================================================"
+                );
               }}
             >
               <ListItemText
@@ -191,8 +198,7 @@ const Sidebar = () => {
         <ListItem
           button
           sx={{
-            backgroundColor:
-              activeItem === "Email" ? "#F15A24" : "transparent",
+            backgroundColor: activeItem === "Email" ? "#F15A24" : "transparent",
             "&:hover": { backgroundColor: "#4C4E641F" },
             borderRadius: "12px",
           }}
@@ -237,7 +243,31 @@ const Sidebar = () => {
             />
           )}
         </ListItem> */}
-
+        <ListItem
+          button
+          sx={{
+            backgroundColor:
+              activeItem === "Supplier" ? "#F15A24" : "transparent",
+            "&:hover": { backgroundColor: "#4C4E641F" },
+            borderRadius: "12px",
+          }}
+          onClick={() => {
+            setActiveItem("Supplier");
+            navigate("/supplier");
+          }}
+        >
+          <ListItemIcon>
+            <ContactsIcon
+              sx={{ color: activeItem === "Supplier" ? "#FFF" : "#4C4E64DE" }}
+            />
+          </ListItemIcon>
+          {isSidebarOpen && (
+            <ListItemText
+              primary="Supplier"
+              sx={{ color: activeItem === "Supplier" ? "#FFF" : "#4C4E64DE" }}
+            />
+          )}
+        </ListItem>
         {/* Marketing */}
         <ListItem
           button
@@ -291,7 +321,9 @@ const Sidebar = () => {
           <ListItemIcon>
             <LogoutIcon color="error" />
           </ListItemIcon>
-          {isSidebarOpen && <ListItemText primary="Logout" sx={{ color: "red" }} />}
+          {isSidebarOpen && (
+            <ListItemText primary="Logout" sx={{ color: "red" }} />
+          )}
         </ListItem>
       </List>
     </Drawer>

@@ -12,6 +12,7 @@ import { AuthProvider, useAuth } from "./components/Authentication/AuthContext";
 import ChatBoxContainer from "./components/chatbox/ChatBoxContainer";
 import { Email } from "@mui/icons-material";
 import EmailBox from "./components/email/EmailBox";
+import SuppliersPage from "./components/supplier/DisplaySupplier";
 
 const GOOGLE_MAPS_API_KEY = "AIzaSyA1m9VQIw8SfC5jYRvgIZeIweHBoW7y7WI";
 const GOOGLE_MAPS_LIBRARIES = ["places"];
@@ -20,9 +21,9 @@ const App = () => {
   return (
     <AuthProvider>
       {/* <LoadScript googleMapsApiKey={GOOGLE_MAPS_API_KEY} libraries={GOOGLE_MAPS_LIBRARIES}> */}
-        <BrowserRouter>
-          <ProtectedApp />
-        </BrowserRouter>
+      <BrowserRouter>
+        <ProtectedApp />
+      </BrowserRouter>
       {/* </LoadScript> */}
     </AuthProvider>
   );
@@ -57,7 +58,7 @@ const ProtectedApp = () => {
         />
       </Routes>
       {/* Đặt ChatBoxContainer ngoài Routes để hiển thị trên mọi trang */}
-      <ChatBoxContainer /> 
+      <ChatBoxContainer />
     </>
   );
 };

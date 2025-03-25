@@ -13,6 +13,7 @@ import Register from "../Authentication/Register";
 import Login from "../Authentication/Login";
 import ForgotPassword from "../Authentication/ForgotPassword";
 import EmailBox from "../email/EmailBox";
+import SuppliersPage from "../supplier/DisplaySupplier";
 
 function ComRoutes() {
   return (
@@ -104,6 +105,14 @@ function ComRoutes() {
             element={
               <ProtectedRoute>
                 <CalenderDetail />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/supplier"
+            element={
+              <ProtectedRoute>
+                <SuppliersPage />
               </ProtectedRoute>
             }
           />
