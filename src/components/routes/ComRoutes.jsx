@@ -14,6 +14,7 @@ import Login from "../Authentication/Login";
 import ForgotPassword from "../Authentication/ForgotPassword";
 import EmailBox from "../email/EmailBox";
 import SuppliersPage from "../supplier/DisplaySupplier";
+import Plan from "../plan/Plan";
 
 function ComRoutes() {
   return (
@@ -49,6 +50,14 @@ function ComRoutes() {
             element={
               <ProtectedRoute>
                 <ForgotPassword />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/plan/:eventId"
+            element={
+              <ProtectedRoute>
+                <Plan />
               </ProtectedRoute>
             }
           />

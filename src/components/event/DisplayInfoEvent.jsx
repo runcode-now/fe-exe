@@ -30,8 +30,8 @@ const DisplayInfoEvent = () => {
   const navigateTo = useCallback(
     (type) => {
       switch (type) {
-        case "task":
-          navigate("/task");
+        case "make plan":
+          navigate(`/plan/${eventId}`);
           break;
         case "agenda":
           navigate(`/schedule-detail/${eventId}`);
