@@ -34,19 +34,21 @@ const GenEventForm = () => {
     location: "",
     participants: "",
     categoryId: "",
+    description: "", // Thêm trường description
   });
 
   const [errors, setErrors] = useState({
     eventName: "",
     startDate: "",
     categoryId: "",
+    description: "",
   });
-    const { user } = useAuth(); // Lấy user từ AuthContext
+  const { user } = useAuth(); // Lấy user từ AuthContext
   // const [userLocation, setUserLocation] = useState(null);
   // const [mapCenter, setMapCenter] = useState({ lat: 21.0278, lng: 105.8342 });
   // const [loadingMap, setLoadingMap] = useState(true);
   const [categories, setCategories] = useState([]);
-  
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -69,6 +71,7 @@ const GenEventForm = () => {
       eventData.eventName &&
       eventData.startDate &&
       eventData.categoryId &&
+      eventData.description &&
       (!end || !start || !end.isBefore(start))
     );
   };
@@ -81,6 +84,7 @@ const GenEventForm = () => {
         eventName: !eventData.eventName ? "Event name is required" : "",
         startDate: !eventData.startDate ? "Start date is required" : "",
         categoryId: !eventData.categoryId ? "Category are required" : "",
+        description: !eventData.description ? "Description is required" : "",
       });
       return; // Prevent form submission
     }
@@ -95,6 +99,7 @@ const GenEventForm = () => {
       ParticipantCount: eventData.participants || undefined, // Nếu null hoặc empty, không gửi
       CategoryId: eventData.categoryId, // Bắt buộc, không cần kiểm tra
       OrganizerId: user.id,
+      Description: eventData.description || undefined,
     };
     console.log("EventPayload", eventPayload);
 
@@ -468,10 +473,32 @@ const GenEventForm = () => {
                     fullWidth
                     sx={{ marginBottom: "20px" }}
                   />
-     
-                    <Typography sx={{ textAlign: "center" }}>
-                      Loading map...
-                    </Typography>
+
+                  <TextField
+                    label={
+                      <>
+                        Description{" "}
+                        <Typography component="span" color="red">
+                          *
+                        </Typography>
+                      </>
+                    }
+                    onBlur={() => handleBlur("description")}
+                    error={!!errors.description}
+                    helperText={errors.description} // Thêm helperText để hiển thị thông báo lỗi
+                    value={eventData.description || ""}
+                    onChange={(e) =>
+                      handleChange("description", e.target.value)
+                    }
+                    fullWidth
+                    multiline
+                    rows={6}
+                    sx={{ marginBottom: "20px" }}
+                  />
+
+                  <Typography sx={{ textAlign: "center" }}>
+                    Loading map...
+                  </Typography>
 
                   {/* Back & Submit Buttons */}
                   <Box
