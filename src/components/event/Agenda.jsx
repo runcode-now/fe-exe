@@ -13,58 +13,62 @@ import dayjs from "dayjs";
 import TextureIcon from "@mui/icons-material/Texture";
 import EventIcon from "@mui/icons-material/Event";
 import ClearIcon from "@mui/icons-material/Clear";
-import { useNavigate, useParams } from "react-router-dom"; // Để lấy eventId từ URL
-import axios from "axios"; // Để gọi API
-import { toast, ToastContainer } from "react-toastify"; // Để hiển thị thông báo
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+// Import Gemini API
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+// Khởi tạo Gemini API với API_KEY
+const genAI = new GoogleGenerativeAI("AIzaSyDFWLgnBucSvGbu4MKJV0rlZUDD1FQhDpM"); // Thay YOUR_GEMINI_API_KEY bằng API key của bạn
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
 const Agenda = () => {
-  const { eventId } = useParams(); // Lấy eventId từ URL (ví dụ: /agenda/:eventId)
-  const [event, setEvent] = useState(null); // Lưu thông tin sự kiện
-  const [agenda, setAgenda] = useState([]); // Khởi tạo danh sách agenda rỗng
-  const [loading, setLoading] = useState(true); // State để kiểm tra loading
-  const [error, setError] = useState(null); // State để xử lý lỗi
+  const { eventId } = useParams();
+  const [event, setEvent] = useState(null);
+  const [agenda, setAgenda] = useState([]);
+  const [categoryName, setCategoryName] = useState(null); // Thêm state để lưu categoryName
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
   const [refreshKey, setRefreshKey] = useState(0);
-  // Lấy thông tin sự kiện và danh sách agenda từ API khi component mount
+
+  // Lấy thông tin sự kiện, danh sách agenda và categoryName
   useEffect(() => {
     const fetchEventAndAgendas = async () => {
       try {
-        // Lấy thông tin sự kiện theo eventId
         const eventResponse = await axios.get(
           `http://103.179.185.149:8435/api/Event/getByEventId/${eventId}`
         );
-        setEvent(eventResponse.data.data); // Giả sử API trả về { message: "...", data: {...} }
+        setEvent(eventResponse.data.data);
 
-        // Lấy danh sách agenda theo eventId
         const agendaResponse = await axios.get(
           `http://103.179.185.149:8435/api/Agenda/getByEvent/${eventId}`
         );
 
-        // Kiểm tra và log dữ liệu chi tiết để debug
-
-        // Parse danh sách agenda, đảm bảo xử lý lỗi và định dạng TimeSpan
+        const categoryResponse = await axios.get(
+          `http://103.179.185.149:8435/GetCagetoryById/${eventResponse.data.data.categoryId}`
+        );
+        setCategoryName(categoryResponse.data.categoryName); // Lấy categoryName từ response
 
         const parsedAgendas = Array.isArray(agendaResponse.data.data)
-          ? agendaResponse.data.data.map((item) => {
-              return {
-                agendaId: item.agendaId || null,
-                startTime: item.timeStart
-                  ? parseTimeSpanToDayjs(item.timeStart)
-                  : null, // Sử dụng "timeStart"
-                endTime: item.timeEnd
-                  ? parseTimeSpanToDayjs(item.timeEnd)
-                  : null, // Sử dụng "timeEnd"
-                description: item.description || "",
-                eventId: item.eventId,
-              };
-            })
+          ? agendaResponse.data.data.map((item) => ({
+              agendaId: item.agendaId || null,
+              startTime: item.timeStart
+                ? parseTimeSpanToDayjs(item.timeStart)
+                : null,
+              endTime: item.timeEnd ? parseTimeSpanToDayjs(item.timeEnd) : null,
+              description: item.description || "",
+              eventId: item.eventId,
+            }))
           : [];
         setAgenda(parsedAgendas);
       } catch (error) {
         console.error("Error fetching event or agendas:", error);
         setEvent(null);
-        setAgenda([]); // Đặt agenda rỗng nếu có lỗi
+        setAgenda([]);
         setError("Failed to load event. Please try again.");
       } finally {
         setLoading(false);
@@ -79,13 +83,9 @@ const Agenda = () => {
     }
   }, [eventId, refreshKey]);
 
-  // Log state agenda sau khi cập nhật để kiểm tra
-  useEffect(() => {}, [agenda]);
-
-  // Hàm parse TimeSpan từ C# (ví dụ: "08:00:00" hoặc "22:00:00") thành dayjs object
+  // Hàm parse TimeSpan từ C# thành dayjs object
   const parseTimeSpanToDayjs = (timeSpan) => {
     if (!timeSpan || timeSpan.trim() === "") return null;
-    // Xử lý định dạng "HH:mm:ss"
     const timeParts = timeSpan.split(":");
     let hours,
       minutes,
@@ -96,7 +96,6 @@ const Agenda = () => {
       console.warn("Invalid TimeSpan format, expected 'HH:mm:ss':", timeSpan);
       return null;
     }
-    // Kiểm tra tính hợp lệ
     if (
       hours >= 0 &&
       hours <= 23 &&
@@ -105,7 +104,6 @@ const Agenda = () => {
       seconds >= 0 &&
       seconds <= 59
     ) {
-      // Tạo dayjs object chỉ với thời gian, không có ngày cụ thể (dùng ngày cố định 01/01/1970)
       return dayjs("1970-01-01")
         .set("hour", hours)
         .set("minute", minutes)
@@ -115,13 +113,81 @@ const Agenda = () => {
     return null;
   };
 
-  // Hàm chuyển đổi dayjs object thành TimeSpan cho C# (ví dụ: 08:00 AM -> "08:00:00")
+  // Hàm chuyển đổi dayjs object thành TimeSpan cho C#
   const formatDayjsToTimeSpan = (dayjsTime) => {
     if (!dayjsTime) return null;
     const hours = dayjsTime.hour();
     const minutes = dayjsTime.minute();
     const seconds = dayjsTime.second();
     return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+  };
+
+  // Hàm làm sạch chuỗi Markdown để chỉ giữ lại JSON
+  const cleanMarkdown = (text) => {
+    // Loại bỏ ```json và ``` ở đầu và cuối chuỗi
+    return text
+      .replace(/```json\n/, '') // Loại bỏ ```json và dòng mới
+      .replace(/```\n/, '')     // Loại bỏ ``` và dòng mới
+      .replace(/```/, '')       // Loại bỏ ``` (trong trường hợp không có dòng mới)
+      .trim();                  // Loại bỏ khoảng trắng thừa
+  }
+
+  // Hàm gọi Gemini API để tạo agenda dựa trên categoryName
+  const generateAgendasWithGemini = async () => {
+    if (!categoryName) {
+      toast.error("Category name not found. Cannot generate agendas.");
+      return;
+    }
+  
+    try {
+      const prompt = `
+        You are an event planner. Based on the event category "${categoryName}", generate a list of agendas for a one-day event. Each agenda item should include:
+        - Start time (in 24-hour format, e.g., "09:00")
+        - End time (in 24-hour format, e.g., "10:00")
+        - Description of the activity (a short sentence, e.g., "Welcome speech and introduction")
+        Provide the output in JSON format with at least 3 agenda items. Example:
+        [
+          { "startTime": "09:00", "endTime": "09:30", "description": "Welcome speech and introduction" },
+          { "startTime": "09:30", "endTime": "10:30", "description": "Keynote presentation" },
+          { "startTime": "10:30", "endTime": "11:00", "description": "Coffee break" }
+        ]
+      `;
+  
+      const result = await model.generateContent(prompt);
+      let responseText = result.response.text();
+  
+      // Làm sạch chuỗi Markdown trước khi parse
+      responseText = cleanMarkdown(responseText);
+  
+      // Parse JSON từ chuỗi đã làm sạch
+      const generatedAgendas = JSON.parse(responseText);
+  
+      // Chuyển đổi dữ liệu từ Gemini thành định dạng phù hợp với state agenda
+      const newAgendas = generatedAgendas.map((item) => {
+        const startTimeParts = item.startTime.split(":");
+        const endTimeParts = item.endTime.split(":");
+        return {
+          agendaId: null,
+          startTime: dayjs("1970-01-01")
+            .set("hour", parseInt(startTimeParts[0]))
+            .set("minute", parseInt(startTimeParts[1]))
+            .set("second", 0),
+          endTime: dayjs("1970-01-01")
+            .set("hour", parseInt(endTimeParts[0]))
+            .set("minute", parseInt(endTimeParts[1]))
+            .set("second", 0),
+          description: item.description,
+          eventId: eventId,
+        };
+      });
+  
+      // Cập nhật state agenda với danh sách mới
+      setAgenda(newAgendas);
+      toast.success("Agendas generated successfully!");
+    } catch (error) {
+      console.error("Error generating agendas with Gemini:", error);
+      toast.error("Failed to generate agendas. Please try again.");
+    }
   };
 
   // Thêm một sự kiện mới vào agenda
@@ -141,7 +207,7 @@ const Agenda = () => {
   // Cập nhật time hoặc description cho mỗi sự kiện
   const handleChange = (index, field, value) => {
     const updatedAgenda = [...agenda];
-    updatedAgenda[index][field] = value; // Giá trị có thể là dayjs hoặc string cho description
+    updatedAgenda[index][field] = value;
     setAgenda(updatedAgenda);
   };
 
@@ -151,19 +217,14 @@ const Agenda = () => {
     setAgenda(updatedAgenda);
   };
 
-  // Lưu toàn bộ danh sách agenda lên API, chuyển đổi thời gian thành TimeSpan cho C#
-
-  // Cập nhật handleSaveAll để gửi AgendaId
-
+  // Lưu toàn bộ danh sách agenda lên API
   const handleSaveAll = async () => {
     try {
-      // Kiểm tra nếu danh sách agenda rỗng
       if (!agenda || agenda.length === 0) {
         toast.error("No agendas to save. Please add at least one time slot.");
         return;
       }
 
-      // Kiểm tra nếu có bất kỳ agenda nào thiếu thông tin bắt buộc
       const invalidAgenda = agenda.some(
         (item) => !item.startTime || !item.endTime || !item.description.trim()
       );
@@ -174,20 +235,18 @@ const Agenda = () => {
       }
 
       const payload = agenda.map((item) => ({
-        AgendaId: item.agendaId || null, // Gửi AgendaId (null cho bản ghi mới)
-        TimeStart: item.startTime
-          ? formatDayjsToTimeSpan(item.startTime) + ""
-          : null, // Chuyển thành "HH:mm:ss"
-        TimeEnd: item.endTime ? formatDayjsToTimeSpan(item.endTime) + "" : null, // Chuyển thành "HH:mm:ss"
+        AgendaId: item.agendaId || null,
+        TimeStart: item.startTime ? formatDayjsToTimeSpan(item.startTime) : null,
+        TimeEnd: item.endTime ? formatDayjsToTimeSpan(item.endTime) : null,
         Description: item.description || null,
         EventId: eventId,
       }));
 
       const response = await axios.post(
-        `http://103.179.185.149:8435/api/Agenda/saveAll/${eventId}`, // Sử dụng endpoint mới với eventId trong URL
-        payload // Gửi payload là danh sách các agenda với AgendaId
+        `http://103.179.185.149:8435/api/Agenda/saveAll/${eventId}`,
+        payload
       );
-      setRefreshKey((prevKey) => prevKey + 1); // 👈 Tăng `refreshKey` để trigger `useEffect`
+      setRefreshKey((prevKey) => prevKey + 1);
       toast.success("Agendas saved successfully!");
     } catch (error) {
       console.error("Error saving agendas:", error);
@@ -269,7 +328,6 @@ const Agenda = () => {
           Agenda
         </Typography>
 
-        {/* Hiển thị thông tin sự kiện từ API */}
         <Grid
           container
           spacing={2}
@@ -290,8 +348,7 @@ const Agenda = () => {
                 maxWidth: "100%",
               }}
             >
-              {event?.eventName || "World Finals"}{" "}
-              {/* Cập nhật fallback để khớp với hình ảnh */}
+              {event?.eventName || "World Finals"}
             </Typography>
           </Grid>
           <Grid
@@ -312,13 +369,22 @@ const Agenda = () => {
             <Typography variant="h6" sx={{ marginLeft: "10px" }}>
               {event?.startDate
                 ? dayjs(event.startDate).format("MMMM D, YYYY")
-                : "March 25, 2025"}{" "}
-              {/* Cập nhật fallback để khớp với hình ảnh */}
+                : "March 25, 2025"}
             </Typography>
           </Grid>
         </Grid>
 
-        {/* Hiển thị danh sách agenda hoặc nút Add nếu rỗng */}
+        {/* Thêm nút để gọi Gemini API và tạo agenda */}
+        <Box sx={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={generateAgendasWithGemini}
+          >
+            Generate Agendas with AI
+          </Button>
+        </Box>
+
         {agenda.length === 0 ? (
           <Box
             sx={{
@@ -350,29 +416,29 @@ const Agenda = () => {
                 <Grid item xs={3}>
                   <TimeField
                     label="Start Time *"
-                    value={item.startTime || null} // Đảm bảo giá trị là null nếu undefined
+                    value={item.startTime || null}
                     onChange={(newValue) =>
                       handleChange(index, "startTime", newValue)
                     }
-                    format="hh:mm A" // Định dạng hiển thị 12h (AM/PM)
+                    format="hh:mm A"
                   />
                 </Grid>
 
                 <Grid item xs={3}>
                   <TimeField
                     label="End Time *"
-                    value={item.endTime || null} // Đảm bảo giá trị là null nếu undefined
+                    value={item.endTime || null}
                     onChange={(newValue) =>
                       handleChange(index, "endTime", newValue)
                     }
-                    format="hh:mm A" // Định dạng hiển thị 12h (AM/PM)
+                    format="hh:mm A"
                   />
                 </Grid>
 
                 <Grid item xs={5}>
                   <TextField
                     label="Description"
-                    value={item.description || ""} // Đảm bảo giá trị là chuỗi rỗng nếu undefined
+                    value={item.description || ""}
                     onChange={(e) =>
                       handleChange(index, "description", e.target.value)
                     }
@@ -395,9 +461,9 @@ const Agenda = () => {
                     onClick={() => handleDeleteEvent(index)}
                     color="error"
                     sx={{
-                      color: "#ff0000", // Màu đỏ cho thùng rác, giống hình
+                      color: "#ff0000",
                       "&:hover": {
-                        backgroundColor: "rgba(255, 0, 0, 0.1)", // Hiệu ứng hover nhẹ
+                        backgroundColor: "rgba(255, 0, 0, 0.1)",
                         fontSize: "1.5 rem !important",
                         fontWeight: "bolder",
                       },

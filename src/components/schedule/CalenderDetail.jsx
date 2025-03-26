@@ -11,7 +11,28 @@ const CalenderDetail = () => {
 
     // Tạo hàm random color
     const getRandomColor = () => {
-        const colors = ["#FFB3B3", "#FFEB99", "#B3FF99", "#99CCFF", "#FFD1E6", "#D1F2FF", "#E3F9E5", "#FFECF0", "#FFE0B2", "#C5CAE9"];
+        const colors = [
+            "#FFB3B3", // Soft Pink
+            "#FFEB99", // Light Yellow
+            "#B3FF99", // Light Green
+            "#99CCFF", // Soft Blue
+            "#FFD1E6", // Light Pink
+            "#D1F2FF", // Light Blue
+            "#E3F9E5", // Pale Green
+            "#FFECF0", // Very Soft Pink
+            "#FFE0B2", // Light Peach
+            "#C5CAE9", // Light Lavender
+            "#FAD02E", // Pale Yellow
+            "#C8E6C9", // Light Mint
+            "#E1F5FE", // Light Sky Blue
+            "#F8BBD0", // Soft Rose
+            "#FFDFDF", // Very Soft Red
+            "#F1F8E9", // Light Olive
+            "#F0F4C3", // Pale Lime
+            "#B3E5FC", // Very Light Blue
+            "#FFF9C4", // Light Lemon
+            "#D1C4E9", // Pale Purple
+          ];
         return colors[Math.floor(Math.random() * colors.length)];
     };
 
@@ -27,7 +48,7 @@ const CalenderDetail = () => {
         try {
             setLoading(true); // Set loading true khi bắt đầu gọi API
             const response = await axios.get(`http://103.179.185.149:8435/api/Agenda/getByEvent/${eventId}`); // Gọi API lấy chi tiết sự kiện
-
+            console.log(response)
             // Trích xuất dữ liệu từ API response
             const { message, data } = response.data;
             console.log("API Response:", data);
