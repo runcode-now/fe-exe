@@ -74,7 +74,7 @@ function ComRoutes() {
             element={
               <ProtectedRoute>
                 <GenEventForm />
-              </ProtectedRoute>
+              </ProtectedRoute> 
             }
           />
           {/* <Route
@@ -130,5 +130,8 @@ function ComRoutes() {
     </SidebarProvider>
   );
 }
+
+
+
 
 export default ComRoutes;
