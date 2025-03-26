@@ -11,8 +11,28 @@ const CalenderDetail = () => {
 
     // Tạo hàm random color
     const getRandomColor = () => {
-        const colors = ["#FFB3B3", "#FFEB99", "#B3FF99", "#99CCFF", "#FFD1E6", "#D1F2FF", "#E3F9E5", "#FFECF0", "#FFE0B2", "#C5CAE9"];
-        return colors[Math.floor(Math.random() * colors.length)];
+        const colors = [
+          "#FFB3B3", // Pink (chẳng hạn dùng cho sự kiện nữ)
+          "#FFEB99", // Light Yellow (sự kiện vui tươi, như lễ hội)
+          "#B3FF99", // Light Green (sự kiện thiên nhiên, môi trường)
+          "#99CCFF", // Light Blue (sự kiện mang tính học hỏi hoặc hòa bình)
+          "#FFD1E6", // Soft Pink (sự kiện gia đình, sinh nhật)
+          "#D1F2FF", // Light Blue (sự kiện sáng tạo, như hội thảo, triển lãm)
+          "#E3F9E5", // Light Green (sự kiện thể thao, outdoor)
+          "#FFECF0", // Very Soft Pink (sự kiện nhỏ, thân mật)
+          "#FFE0B2", // Peach (sự kiện dành cho trẻ em)
+          "#C5CAE9", // Light Purple (sự kiện sang trọng hoặc tiệc tối)
+          "#FF6347", // Tomato Red (sự kiện thể thao, sôi động)
+          "#32CD32", // Lime Green (sự kiện ngoại trời, thể thao, outdoor)
+          "#FF4500", // Orange Red (sự kiện năng động, mạnh mẽ)
+          "#8A2BE2", // Blue Violet (sự kiện nghệ thuật, sáng tạo)
+          "#FFD700", // Gold (sự kiện sang trọng, lễ trao giải)
+          "#8B0000", // Dark Red (sự kiện nghiêm túc, tưởng niệm)
+          "#20B2AA", // Light Sea Green (sự kiện thư giãn, wellness)
+          "#ADFF2F", // Green Yellow (sự kiện sức khỏe, môi trường)
+          "#FF1493", // Deep Pink (sự kiện đặc biệt, nữ quyền)
+          "#00BFFF", // Deep Sky Blue (sự kiện liên quan đến công nghệ, đổi mới)
+        ];
     };
 
     useEffect(() => {
@@ -27,7 +47,7 @@ const CalenderDetail = () => {
         try {
             setLoading(true); // Set loading true khi bắt đầu gọi API
             const response = await axios.get(`http://103.179.185.149:8435/api/Agenda/getByEvent/${eventId}`); // Gọi API lấy chi tiết sự kiện
-
+            console.log(response)
             // Trích xuất dữ liệu từ API response
             const { message, data } = response.data;
             console.log("API Response:", data);
