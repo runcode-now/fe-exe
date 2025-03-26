@@ -12,27 +12,28 @@ const CalenderDetail = () => {
     // Tạo hàm random color
     const getRandomColor = () => {
         const colors = [
-          "#FFB3B3", // Pink (chẳng hạn dùng cho sự kiện nữ)
-          "#FFEB99", // Light Yellow (sự kiện vui tươi, như lễ hội)
-          "#B3FF99", // Light Green (sự kiện thiên nhiên, môi trường)
-          "#99CCFF", // Light Blue (sự kiện mang tính học hỏi hoặc hòa bình)
-          "#FFD1E6", // Soft Pink (sự kiện gia đình, sinh nhật)
-          "#D1F2FF", // Light Blue (sự kiện sáng tạo, như hội thảo, triển lãm)
-          "#E3F9E5", // Light Green (sự kiện thể thao, outdoor)
-          "#FFECF0", // Very Soft Pink (sự kiện nhỏ, thân mật)
-          "#FFE0B2", // Peach (sự kiện dành cho trẻ em)
-          "#C5CAE9", // Light Purple (sự kiện sang trọng hoặc tiệc tối)
-          "#FF6347", // Tomato Red (sự kiện thể thao, sôi động)
-          "#32CD32", // Lime Green (sự kiện ngoại trời, thể thao, outdoor)
-          "#FF4500", // Orange Red (sự kiện năng động, mạnh mẽ)
-          "#8A2BE2", // Blue Violet (sự kiện nghệ thuật, sáng tạo)
-          "#FFD700", // Gold (sự kiện sang trọng, lễ trao giải)
-          "#8B0000", // Dark Red (sự kiện nghiêm túc, tưởng niệm)
-          "#20B2AA", // Light Sea Green (sự kiện thư giãn, wellness)
-          "#ADFF2F", // Green Yellow (sự kiện sức khỏe, môi trường)
-          "#FF1493", // Deep Pink (sự kiện đặc biệt, nữ quyền)
-          "#00BFFF", // Deep Sky Blue (sự kiện liên quan đến công nghệ, đổi mới)
-        ];
+            "#FFB3B3", // Soft Pink
+            "#FFEB99", // Light Yellow
+            "#B3FF99", // Light Green
+            "#99CCFF", // Soft Blue
+            "#FFD1E6", // Light Pink
+            "#D1F2FF", // Light Blue
+            "#E3F9E5", // Pale Green
+            "#FFECF0", // Very Soft Pink
+            "#FFE0B2", // Light Peach
+            "#C5CAE9", // Light Lavender
+            "#FAD02E", // Pale Yellow
+            "#C8E6C9", // Light Mint
+            "#E1F5FE", // Light Sky Blue
+            "#F8BBD0", // Soft Rose
+            "#FFDFDF", // Very Soft Red
+            "#F1F8E9", // Light Olive
+            "#F0F4C3", // Pale Lime
+            "#B3E5FC", // Very Light Blue
+            "#FFF9C4", // Light Lemon
+            "#D1C4E9", // Pale Purple
+          ];
+        return colors[Math.floor(Math.random() * colors.length)];
     };
 
     useEffect(() => {
