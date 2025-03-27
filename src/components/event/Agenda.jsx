@@ -49,7 +49,7 @@ const Agenda = () => {
         );
 
         const categoryResponse = await axios.get(
-          `http://103.179.185.149:8435/GetCagetoryById/${eventResponse.data.data.categoryId}`
+          `http://103.179.185.149:8435/GetCategoryById/${eventResponse.data.data.categoryId}`
         );
         setCategoryName(categoryResponse.data.categoryName); // Lấy categoryName từ response
 
@@ -126,11 +126,11 @@ const Agenda = () => {
   const cleanMarkdown = (text) => {
     // Loại bỏ ```json và ``` ở đầu và cuối chuỗi
     return text
-      .replace(/```json\n/, '') // Loại bỏ ```json và dòng mới
-      .replace(/```\n/, '')     // Loại bỏ ``` và dòng mới
-      .replace(/```/, '')       // Loại bỏ ``` (trong trường hợp không có dòng mới)
-      .trim();                  // Loại bỏ khoảng trắng thừa
-  }
+      .replace(/```json\n/, "") // Loại bỏ ```json và dòng mới
+      .replace(/```\n/, "") // Loại bỏ ``` và dòng mới
+      .replace(/```/, "") // Loại bỏ ``` (trong trường hợp không có dòng mới)
+      .trim(); // Loại bỏ khoảng trắng thừa
+  };
 
   // Hàm gọi Gemini API để tạo agenda dựa trên categoryName
   const generateAgendasWithGemini = async () => {
@@ -138,7 +138,7 @@ const Agenda = () => {
       toast.error("Category name not found. Cannot generate agendas.");
       return;
     }
-  
+
     try {
       const prompt = `
         You are an event planner. Based on the event category "${categoryName}", generate a list of agendas for a one-day event. Each agenda item should include:
@@ -152,16 +152,16 @@ const Agenda = () => {
           { "startTime": "10:30", "endTime": "11:00", "description": "Coffee break" }
         ]
       `;
-  
+
       const result = await model.generateContent(prompt);
       let responseText = result.response.text();
-  
+
       // Làm sạch chuỗi Markdown trước khi parse
       responseText = cleanMarkdown(responseText);
-  
+
       // Parse JSON từ chuỗi đã làm sạch
       const generatedAgendas = JSON.parse(responseText);
-  
+
       // Chuyển đổi dữ liệu từ Gemini thành định dạng phù hợp với state agenda
       const newAgendas = generatedAgendas.map((item) => {
         const startTimeParts = item.startTime.split(":");
@@ -180,7 +180,7 @@ const Agenda = () => {
           eventId: eventId,
         };
       });
-  
+
       // Cập nhật state agenda với danh sách mới
       setAgenda(newAgendas);
       toast.success("Agendas generated successfully!");
@@ -236,7 +236,9 @@ const Agenda = () => {
 
       const payload = agenda.map((item) => ({
         AgendaId: item.agendaId || null,
-        TimeStart: item.startTime ? formatDayjsToTimeSpan(item.startTime) : null,
+        TimeStart: item.startTime
+          ? formatDayjsToTimeSpan(item.startTime)
+          : null,
         TimeEnd: item.endTime ? formatDayjsToTimeSpan(item.endTime) : null,
         Description: item.description || null,
         EventId: eventId,
@@ -375,7 +377,9 @@ const Agenda = () => {
         </Grid>
 
         {/* Thêm nút để gọi Gemini API và tạo agenda */}
-        <Box sx={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
+        <Box
+          sx={{ display: "flex", justifyContent: "center", marginTop: "20px" }}
+        >
           <Button
             variant="contained"
             color="primary"
